@@ -24,8 +24,13 @@ jobs:
     - name: Run Python Script
       run: python3 Educational_SRC_Member_Retrieval.py
 
+    - name: list files
+      run: |
+        pwd
+        ls -l
+
     - name: Upload Results
       uses: actions/upload-artifact@master
       with:
         name: script-results 
-        path: .*
+        path: ./*.json
