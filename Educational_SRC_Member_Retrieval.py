@@ -7,6 +7,9 @@ BASE_URL = "https://src.sjtu.edu.cn/rank/firm/0/?page="
 PAGE_RANGE = range(1, 209)
 CHUNK_SIZE = 500
 
+# 定义敏感词列表
+SENSITIVE_WORDS = ["众测", "解放军"]
+
 def fetch_data(page_num):
     url = BASE_URL + str(page_num)
     print(f"访问URL: {url}")
@@ -60,7 +63,12 @@ save_data_to_json('table_data.json', all_data)
 print("数据已成功爬取并保存为table_data.json文件")
 
 # 步骤2: 数据清洗和格式处理
-cleaned_data = [item['Name'] for item in all_data if 'Name' in item and '众测' not in item['Name']]
+def filter_sensitive_words(text, sensitive_words):
+    for word in sensitive_words:
+        text = text.replace(word, '')
+    return text
+
+cleaned_data = [filter_sensitive_words(item['Name'], SENSITIVE_WORDS) for item in all_data if 'Name' in item and '众测' not in item['Name']]
 
 formatted_data = [{
     "id": f"{item}:company",
